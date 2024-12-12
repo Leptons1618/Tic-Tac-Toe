@@ -1,4 +1,4 @@
-# Tic Tac Toe with Minimax AI
+# [Tic Tac Toe with Minimax AI](https://leptons1618.github.io/Tic-Tac-Toe/)
 
 This project is a web-based Tic Tac Toe game that features an AI opponent powered by the Minimax algorithm. You can play against the AI or with another player in two-player mode.
 
