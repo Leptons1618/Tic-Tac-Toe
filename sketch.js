@@ -4,7 +4,6 @@ let board = [
     ['', '', '']
 ];
 
-let w; // = width / 3;
 let h; // = height / 3;
 
 const ai = 'X';
@@ -34,11 +33,11 @@ function setup() {
     playAgainButton.hide(); // Ensure it's hidden initially
 }
 
-function startGame() {
+function startGame(resetStats = false) {
     board = [
         ['', '', ''],
         ['', '', ''],
-        ['', '', '']
+        ['', '', ''] // Add the third row
     ];
     winLine = null;
     gameMode = document.getElementById('gameMode').value;
@@ -58,6 +57,20 @@ function startGame() {
 
     // Show the stats table
     document.getElementById('statsTable').style.display = 'block';
+
+    // Reset stats table for a new game if resetStats is true
+    if (resetStats) {
+        document.getElementById('humanWins').innerText = 0;
+        document.getElementById('humanLosses').innerText = 0;
+        document.getElementById('aiWins').innerText = 0;
+        document.getElementById('aiLosses').innerText = 0;
+        document.getElementById('ties').innerText = 0;
+        humanWins = 0;
+        aiWins = 0;
+        tiesCount = 0;
+        humanLosses = 0;
+        aiLosses = 0;
+    }
 
     // Remove existing result message if any
     if (resultP) {
@@ -79,14 +92,15 @@ function equals3(a, b, c) {
     return a == b && b == c && a != '';
 }
 
-function checkWinner() {
+function evaluateWinner(board) {
     let winner = null;
+    let winInfo = null;
 
     // Horizontal
-    for (let j = 0; j < 3; j++) { // Changed to j
-        if (equals3(board[j][0], board[j][1], board[j][2])) { // Changed from board[i][x]
+    for (let j = 0; j < 3; j++) {
+        if (equals3(board[j][0], board[j][1], board[j][2])) {
             winner = board[j][0];
-            winLine = { type: 'horizontal', index: j };
+            winInfo = { type: 'horizontal', index: j };
         }
     }
 
@@ -94,43 +108,51 @@ function checkWinner() {
     for (let i = 0; i < 3; i++) {
         if (equals3(board[0][i], board[1][i], board[2][i])) {
             winner = board[0][i];
-            winLine = { type: 'vertical', index: i };
+            winInfo = { type: 'vertical', index: i };
         }
     }
 
     // Diagonal
     if (equals3(board[0][0], board[1][1], board[2][2])) {
         winner = board[0][0];
-        winLine = { type: 'diagonal', index: 0 };
+        winInfo = { type: 'diagonal', index: 0 };
     }
     if (equals3(board[2][0], board[1][1], board[0][2])) {
         winner = board[2][0];
-        winLine = { type: 'diagonal', index: 1 };
+        winInfo = { type: 'diagonal', index: 1 };
     }
 
     let openSpots = 0;
-    for (let j = 0; j < 3; j++) { // Changed to j
-        for (let i = 0; i < 3; i++) { // Changed to i
-            if (board[j][i] == '') { // Changed from board[i][j]
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < 3; i++) {
+            if (board[j][i] == '') {
                 openSpots++;
             }
         }
     }
 
     if (winner == null && openSpots == 0) {
-        tiesCount++;
-        updateStats();
-        return 'tie';
-    } else if (winner != null) {
-        if (winner === human) {
-            humanWins++; // Increment by 1 instead of adding score
+        return { winner: 'tie', winInfo: null };
+    } else {
+        return { winner, winInfo };
+    }
+}
+
+function checkWinner() {
+    let result = evaluateWinner(board);
+    if (result.winner != null) {
+        if (result.winner == 'tie') {
+            tiesCount++;
+        } else if (result.winner === human) {
+            humanWins++;
             aiLosses++;
-        } else if (winner === ai) {
-            aiWins++; // Increment by 1 instead of adding score
+        } else if (result.winner === ai) {
+            aiWins++;
             humanLosses++;
         }
+        winLine = result.winInfo; // Set the winLine variable
         updateStats();
-        return winner;
+        return result.winner;
     } else {
         return null;
     }
@@ -183,19 +205,20 @@ function draw() {
         noLoop();
         if (result !== 'tie') {
             if (winLine) {
-                stroke(0, 255, 0); // Green color for win line
-                strokeWeight(8);
+                stroke(0, 0, 0); // Black color for win line
+                strokeWeight(4); // Thinner line
+                let offset = w / 6; // Shorten the line
                 if (winLine.type === 'horizontal') {
                     let y = winLine.index * h + h / 2;
-                    line(0, y, width, y);
+                    line(offset, y, width - offset, y);
                 } else if (winLine.type === 'vertical') {
                     let x = winLine.index * w + w / 2;
-                    line(x, 0, x, height);
+                    line(x, offset, x, height - offset);
                 } else if (winLine.type === 'diagonal') {
                     if (winLine.index === 0) {
-                        line(0, 0, width, height);
+                        line(offset, offset, width - offset, height - offset);
                     } else {
-                        line(0, height, width, 0);
+                        line(offset, height - offset, width - offset, offset);
                     }
                 }
             }

@@ -1,4 +1,3 @@
-
 # Tic Tac Toe with Minimax AI
 
 This project is a web-based Tic Tac Toe game that features an AI opponent powered by the Minimax algorithm. You can play against the AI or with another player in two-player mode.
@@ -10,6 +9,7 @@ This project is a web-based Tic Tac Toe game that features an AI opponent powere
 - **Dynamic Starting Player**: Choose who starts the game—either player or AI.
 - **Game Statistics**: Track wins, losses, and ties for both players.
 - **Interactive Interface**: User-friendly controls and responsive game board.
+- **Play Again Button**: Easily start a new game without resetting the statistics.
 
 ## How to Run the Game
 
@@ -20,6 +20,7 @@ This project is a web-based Tic Tac Toe game that features an AI opponent powere
    - Choose the starting player.
    - Click on "Start Game" to begin.
    - Click on the grid to make your move.
+   - Click on "🔄 Play Again" to start a new game without resetting the statistics.
 
 ## File Structure
 

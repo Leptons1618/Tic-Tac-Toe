@@ -125,9 +125,7 @@
                 <!-- Options will be populated dynamically -->
             </select>
         </div>
-        <button id="startButton" onclick="startGame()">Start Game</button>
-        <!-- Play Again Button -->
-        <button id="playAgainButton" onclick="startGame()" style="display: none;">Play Again</button>
+        <button id="startButton" onclick="startGame(true)">Start Game</button>
     </div>
     
     <!-- Win/Loss Tracking Table -->
@@ -153,6 +151,8 @@
                 <td></td> <!-- Left empty for alignment -->
             </tr>
         </table>
+        <!-- Play Again Button -->
+        <button id="playAgainButton" onclick="startGame()">🔄 Play Again</button>
     </div>
     
     <script>

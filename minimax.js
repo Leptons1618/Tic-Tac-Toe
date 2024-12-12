@@ -27,9 +27,9 @@ const scores = {
 };
 
 function minimax(board, depth, isMaximizing) {
-    let result = checkWinner();
-    if (result !== null) {
-        return scores[result]; // This return value is used only within minimax
+    let result = evaluateWinner(board);
+    if (result.winner !== null) {
+        return scores[result.winner];
     }
 
     if (isMaximizing) {
